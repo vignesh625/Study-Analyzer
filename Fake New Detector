@@ -1,0 +1,51 @@
+import java.io.*;
+import java.util.*;
+
+public class FakeNewsDetector {
+
+    private static final List<String> FAKE_NEWS_KEYWORDS = Arrays.asList("shocking", "clickbait", "conspiracy", "fake", "hoax");
+    private static final double SIMILARITY_THRESHOLD = 0.3;
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Enter a news headline or article text:");
+        String article = scanner.nextLine();
+        scanner.close();
+
+        boolean isFake = checkFakeNews(article);
+
+        if (isFake) {
+            System.out.println("⚠️ Warning: This article may contain fake news.");
+        } else {
+            System.out.println("✅ This article appears to be real.");
+        }
+    }
+
+    // Simple Fake News Detector Logic
+    private static boolean checkFakeNews(String article) {
+        // Check for clickbait keywords
+        for (String keyword : FAKE_NEWS_KEYWORDS) {
+            if (article.toLowerCase().contains(keyword)) {
+                return true;
+            }
+        }
+
+        // Compare with sample fake news dataset using Jaccard Similarity
+        List<String> fakeNewsSamples = Arrays.asList(
+                "Breaking: Shocking new conspiracy revealed!",
+                "Government hiding secret alien invasion!",
+                "Doctors warn: This simple trick will cure all diseases!"
+        );
+
+        JaccardSimilarity jaccard = new JaccardSimilarity();
+        for (String fakeSample : fakeNewsSamples) {
+            double similarity = jaccard.apply(article, fakeSample);
+            if (similarity > SIMILARITY_THRESHOLD) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
