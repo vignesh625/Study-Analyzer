@@ -1,0 +1,51 @@
+import java.util.Scanner;
+
+public class SmartHomeSimulator {
+    private boolean lightOn = false;
+    private boolean fanOn = false;
+    private Scanner scanner;
+
+    public SmartHomeSimulator() {
+        scanner = new Scanner(System.in);
+    }
+
+    private void updateStatus() {
+        String lightStatus = "OFF";
+        String fanStatus = "OFF";
+        
+        if (lightOn) {
+            lightStatus = "ON";
+        }
+        if (fanOn) {
+            fanStatus = "ON";
+        }
+        
+        System.out.println("Light: " + lightStatus + ", Fan: " + fanStatus);
+    }
+
+    private void toggleDevice(String device) {
+        if (device.equalsIgnoreCase("light")) {
+            lightOn = !lightOn;
+        } else if (device.equalsIgnoreCase("fan")) {
+            fanOn = !fanOn;
+        }
+        updateStatus();
+    }
+
+    public void start() {
+        while (true) {
+            System.out.println("Enter device to toggle (light/fan) or 'exit' to quit:");
+            String input = scanner.nextLine();
+            if (input.equalsIgnoreCase("exit")) {
+                System.out.println("Exiting Smart Home Simulator.");
+                break;
+            }
+            toggleDevice(input);
+        }
+    }
+
+    public static void main(String[] args) {
+        SmartHomeSimulator simulator = new SmartHomeSimulator();
+        simulator.start();
+    }
+}
