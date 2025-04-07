@@ -1,0 +1,119 @@
+import java.util.Scanner;
+
+public class StudentTester
+{
+    public static void main(String[] args)
+    {
+        // Prompt the user for name, test scores, and service hours
+        System.out.println("Please enter the student name: ");
+        Scanner s = new Scanner(System.in);
+        String v = s.nextLine();
+        System.out.println("Please eneter the Math Score: ");
+        int x = s.nextInt();
+        
+        System.out.println("Please eneter the ELA Score: ");
+       int c = s.nextInt();
+        System.out.println("Please eneter the Service Hours: ");
+      int h = s.nextInt();
+        // Create a HSStudent object
+        HSStudent g = new HSStudent(v,x,c,h);
+        // Print the results
+        System.out.println("Pass Math? " + g.passMath());
+        System.out.println("Pass ELA? " + g.passEla());
+        System.out.println("Completed Service Hours? " + g.completeService());
+        System.out.println(g.toString());
+    }
+}
+public class StudentTest {
+
+    private int mathScore;
+    private int elaScore;
+    private String name;
+
+    public StudentTest(String name, int mathScore, int elaScore){
+       this.name = name;
+       this.mathScore = mathScore;
+       this.elaScore = elaScore;
+    }
+
+	public int getMathScore() {
+	  return mathScore;
+	}
+
+	public void setMathScore(int mathScore) {
+		this.mathScore = mathScore;
+	}
+
+	public int getElaScore() {
+	   return elaScore;
+	}
+
+	public void setElaScore(int elaScore) {
+		this.elaScore = elaScore;
+	}
+
+	public String getName() {
+	   return name;	
+	}
+
+} public class HSStudent extends StudentTest {
+
+    private int serviceHours;
+
+    public HSStudent(String name, int mathScore, int elaScore, int serviceHours){
+       super(name, mathScore, elaScore);
+       this.serviceHours = serviceHours;
+       
+    }
+
+    public int getServiceHours(){
+       return serviceHours;
+    }
+
+    public void setServiceHours(int serviceHours){
+       
+       this.serviceHours = serviceHours;
+    }
+
+    // If math score is at least 525, return true
+    public boolean passMath(){
+        if(super.getMathScore() >= 525){
+            return true;
+        }
+        return false;
+    }
+
+    // If ela score is at least 560, return true
+    public boolean passEla(){
+       if(super.getElaScore() >= 560){
+           return true;
+       }
+       return false;
+    }
+
+    // If service hours are at least 75, return true
+    public boolean completeService(){
+        if(getServiceHours() >= 75){
+            return true;
+        }
+        return false;
+    }
+
+    // If the student has passed math, passed ela, and completed
+    // service hours, return true.
+    public boolean gradQualify(){
+       if(passMath() && passEla() && completeService()){
+           return true;
+       }
+       return false;
+    }
+
+    
+    public String toString(){
+        if (gradQualify()){
+            return super.getName() + " has qualified for graduation.";
+        }
+
+        return super.getName() + " has not yet qualified for graduation.";
+    }
+}
