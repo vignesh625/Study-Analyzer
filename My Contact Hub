@@ -1,0 +1,101 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class MyContactHub {
+    public static void main(String[] args) {
+        ArrayList<String> contacts = new ArrayList<>();
+        ArrayList<String> messages = new ArrayList<>();
+        Scanner input = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("\nChoose one of the following actions:");
+            System.out.println("- add contact");
+            System.out.println("- remove contact");
+            System.out.println("- view contacts");
+            System.out.println("- call someone");
+            System.out.println("- send message");
+            System.out.println("- remove message");
+            System.out.println("- view messages");
+            System.out.println("- exit");
+
+            String choice = input.nextLine().toLowerCase();
+
+            if (choice.equals("add contact")) {
+                System.out.print("Enter contact number to add: ");
+                String contact = input.nextLine();
+                contacts.add(contact);
+                System.out.println("Contact added.");
+
+            } else if (choice.equals("remove contact")) {
+                System.out.print("Enter contact number to remove: ");
+                String removeContact = input.nextLine();
+                if (contacts.remove(removeContact)) {
+                    System.out.println("Contact removed.");
+                } else {
+                    System.out.println("Contact not found.");
+                }
+
+            } else if (choice.equals("view contacts")) {
+                if (contacts.isEmpty()) {
+                    System.out.println("No contacts saved.");
+                } else {
+                    System.out.println("Contacts:");
+                    for (int i = 0; i < contacts.size(); i++) {
+                        System.out.println((i + 1) + ". " + contacts.get(i));
+                    }
+                }
+
+            } else if (choice.equals("call someone")) {
+                System.out.print("Enter number to call: ");
+                String num = input.nextLine();
+
+                if (contacts.contains(num)) {
+                    System.out.println("Dialing the number.......");
+                } else {
+                    System.out.println("Sorry, I can't dial the number. You're a scam call...");
+                }
+
+            } else if (choice.equals("send message")) {
+                System.out.print("Type your message: ");
+                String message = input.nextLine();
+                messages.add(message);
+                System.out.println("Message sent!");
+
+            } else if (choice.equals("remove message")) {
+                if (messages.isEmpty()) {
+                    System.out.println("No messages to remove.");
+                } else {
+                    System.out.println("Messages:");
+                    for (int i = 0; i < messages.size(); i++) {
+                        System.out.println((i + 1) + ". " + messages.get(i));
+                    }
+                    System.out.print("Enter message number to remove: ");
+                    int removeIndex = Integer.parseInt(input.nextLine()) - 1;
+                    if (removeIndex >= 0 && removeIndex < messages.size()) {
+                        messages.remove(removeIndex);
+                        System.out.println("Message removed.");
+                    } else {
+                        System.out.println("Invalid message number.");
+                    }
+                }
+
+            } else if (choice.equals("view messages")) {
+                if (messages.isEmpty()) {
+                    System.out.println("No messages available.");
+                } else {
+                    System.out.println("Messages:");
+                    for (int i = 0; i < messages.size(); i++) {
+                        System.out.println((i + 1) + ". " + messages.get(i));
+                    }
+                }
+
+            } else if (choice.equals("exit")) {
+                System.out.println("Exiting the program.");
+                break;
+
+            } else {
+                System.out.println("Invalid input. Try again.");
+            }
+        }
+    }
+}
