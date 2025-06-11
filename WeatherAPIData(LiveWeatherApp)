@@ -1,0 +1,103 @@
+build.gradle
+plugins {
+    id 'java'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // AssemblyAI SDK (if you are using it)
+    implementation files('libs/assemblyai-sdk.jar')
+
+    // JSON parsing library
+    implementation 'org.json:json:20210307'
+
+    // JUnit for testing
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+package org.example;
+
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Scanner;
+import org.json.JSONObject;
+
+public class WeatherAPIData {
+    private static final String API_KEY = "YOUR_API_KEY"; // Replace with your actual WeatherAPI.com key
+
+    public static void main(String[] args) {
+        try (Scanner scanner = new Scanner(System.in)) {
+            String city;
+
+            while (true) {
+                System.out.print("Enter City (Say No to Quit): ");
+                city = scanner.nextLine().trim();
+
+                if (city.equalsIgnoreCase("No")) break;
+
+                JSONObject weatherData = getWeatherData(city);
+
+                if (weatherData != null) {
+                    displayWeatherData(weatherData);
+                } else {
+                    System.out.println("Weather data not available for: " + city);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static JSONObject getWeatherData(String city) {
+        String apiUrl = "http://api.weatherapi.com/v1/current.json?key=" + API_KEY + "&q=" + city;
+        try {
+            URL url = new URL(apiUrl);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.connect();
+
+            int responseCode = conn.getResponseCode();
+            if (responseCode != 200) {
+                System.out.println("HTTP Error Code: " + responseCode);
+                return null;
+            }
+
+            Scanner scanner = new Scanner(url.openStream());
+            StringBuilder inline = new StringBuilder();
+            while (scanner.hasNext()) {
+                inline.append(scanner.nextLine());
+            }
+            scanner.close();
+
+            return new JSONObject(inline.toString());
+
+        } catch (IOException e) {
+            System.out.println("Error fetching weather data: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public static void displayWeatherData(JSONObject weatherData) {
+        JSONObject location = weatherData.getJSONObject("location");
+        JSONObject current = weatherData.getJSONObject("current");
+
+        System.out.println("\n Location: " + location.getString("name") + ", " + location.getString("country"));
+        System.out.println(" Temperature: " + current.getDouble("temp_c") + "°C");
+        System.out.println(" Condition: " + current.getJSONObject("condition").getString("text"));
+        System.out.println(" Wind: " + current.getDouble("wind_kph") + " kph");
+        System.out.println(" Humidity: " + current.getDouble("humidity") + "%");
+        System.out.println(" Last Updated: " + current.getString("last_updated") + "\n");
+    }
+}
